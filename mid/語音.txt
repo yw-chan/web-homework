@@ -1,0 +1,32 @@
+var utterThis = new window.SpeechSynthesisUtterance();
+utterThis.text = '你好，世界！';
+window.speechSynthesis.speak(utterThis);
+var utterThis = new window.SpeechSynthesisUtterance('你好，世界！');
+
+text – 要合成的文字內容，字符串。
+lang – 使用的語言，字符串， 例如："zh-cn"
+voiceURI – 指定希望使用的聲音和服務，字符串。
+volume–聲音的音量，區間範圍是0到1，默認是1。
+rate–語速，數值，默認值是1，範圍是0.1到10，表示語速的倍數，例如2表示正常語速的兩倍。
+pitch–表示說話的音高，數值，範圍從0（最小）到2（最大）。默認值為1。
+
+speechSynthesis.getVoices()
+
+http://www.zhangxinxu.com/wordpress/2017/01/html5-speech-recognition-synthesis-api/
+
+// 使用 中序式轉後序式 中的 toPostfix
+function evaluate(expr) {
+    var stack = [];
+    toPostfix(expr).split('').forEach(function(c) {
+        if('+-*/'.indexOf(c) !== -1) {
+            var p2 = stack.pop();
+            var p1 = stack.pop();
+            stack.push(cal(c, p1, p2));
+        } else {
+            stack.push(parseInt(c));
+        }
+    });
+    return stack.pop();
+}
+
+print(evaluate('(1+2)*(3+4)'));

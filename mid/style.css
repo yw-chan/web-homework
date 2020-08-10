@@ -1,0 +1,295 @@
+.my-container {
+    margin: 0;
+    padding: 0;
+}
+ @media only screen and (min-width: 768px) {
+    .my-container {
+        margin: 32px 16px;
+        padding: 16px;
+    }
+}
+
+
+.title {
+    background-color:#e5e5e5;
+    padding:15px;
+    text-align:center;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #e5e5e5;
+    /* color: white; */
+    text-align: center;
+}
+
+.progress {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+  
+.bar {
+    width: 0%;
+    height: 20px;
+    background-color: #4CAF50;
+    text-align: center;
+    line-height: 20px;
+    color: white;
+    border-radius: 5px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    /*appearance: none;*/
+    width: 10px;
+    height: 20px;
+    border-radius: 3px;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 10px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+}
+
+.btn {
+    cursor: pointer; /* Add a pointer cursor on mouse-over */
+    border: none; /* Remove borders */
+    background-color: #4CAF50;
+    color: white; /* Add a text color */
+    padding: 8px 16px; /* Add some padding */
+    margin: 4pt;
+    border-radius: 5px;
+    font-size: 125%;
+    transition:.5s;
+}
+
+.btn:hover {
+    background-color: #2f6a31;
+}
+
+.btn:disabled,
+.btn[disabled]{
+    cursor: auto;
+    border: none;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.big-text {
+    font-size: 125%;
+}
+
+.alert {
+    padding: 16px;
+    background-color: #ffdddd;
+    border-left: 6px solid #f44336;
+    color: #3d3d3d;
+    opacity: 1;
+    transition: 0.6s;
+    margin-bottom: 15px;
+}
+
+.alert.success {
+    background-color: #ddffdd;
+    border-left: 6px solid #4CAF50;
+}
+.alert.info { 
+    background-color: #e7f3fe;
+    border-left: 6px solid #2196F3;
+}
+.alert.warning {
+    background-color: #ffffcc;
+    border-left: 6px solid #ffeb3b;
+}
+
+.closebtn {
+    margin-left: 15px;
+    color: #3d3d3d;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: #999999;
+}
+
+video {
+    width: 100%;
+    height: auto;
+}
+
+caption {
+    font-size: 125%;
+    /* font-weight: bold; */
+}
+caption, th, td {
+    padding: 4px;
+}
+/* Select */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    /* appearance: none; */
+    outline: 0;
+    box-shadow: none;
+    border: 0 !important;
+    background: #4CAF50;
+    background-image: none;
+}
+
+/* Custom Select */
+
+.select {
+    position: relative;
+    display: block;
+    /* max-width: 250px; */
+    /* height: 35px; */
+    line-height: 1.5;
+    /* background: #2c3e50; */
+    overflow: hidden;
+    border-radius: 4px;
+    margin: 4px;
+}
+
+select {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 125%;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+select::-ms-expand {
+    display: none;
+}
+
+/* Arrow */
+
+.select::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 8px 16px;
+    background: #4CAF50;
+    color: #ffffff;
+    pointer-events: none;
+}
+
+/* Transition */
+
+.select:hover::after {
+    color: #ddffdd;
+    background: #46a049;
+}
+
+.select::after {
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+}
+
+/* radio */
+
+/* The container */
+.radio-container {
+    position: relative;
+    padding: 2px 2px 2px 24px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: 16px;
+    width: 16px;
+    background-color: transparent;
+    border-radius: 50%;
+    border: 2px solid #4CAF50;
+    opacity: 0.5;
+    transition: opacity .5s;
+}
+
+/* On mouse-over, add a grey background color */
+.radio-container:hover input ~ .checkmark {
+    opacity: 1;
+}
+
+/* When the radio button is checked, add a blue background */
+.radio-container input:checked ~ .checkmark {
+    background-color: transparent;
+    opacity: 1;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.radio-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.radio-container .checkmark:after {
+ 	top: 2px;
+	left: 2px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: #4CAF50;
+}
+
+.cursor-crosshair {cursor: crosshair;}
+.cursor-auto {cursor: auto;}
