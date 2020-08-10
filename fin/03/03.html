@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>考題 03</title>
+
+    <script> 
+
+        //======================================
+        //  定義廣域變數, 在各個function()中皆可取用
+        //======================================
+        var canvas, context;
+        var gaku = new Image();
+
+
+        //宣告一個尚未生成內容的主角
+        var sprite;
+
+
+
+
+        //---------------------------------------------------------
+        //主角的建構元函式
+        //傳入:x座標, y座標, 方向
+        //將生成一個主角物件, 另外包括draw()方法.
+        //---------------------------------------------------------
+        var MySprite = function (cx, cy, dct) {
+            this.step = 0;
+            this.cx = cx;
+            this.cy = cy;
+            this.dct = dct;
+
+            this.draw = function () {
+                // 畫圖 
+                context.drawImage(gaku, this.step * 32, this.dct * 32, 32, 32, this.cx, this.cy, 32, 32);
+
+                // 換下一個子圖
+                this.step++;
+                this.step %= 4;
+
+                // 移動主角座標
+                //下 0
+                if (this.dct == 0) { if (this.cy < canvas.height - 32) this.cy += 4; }
+                //上 3
+                if (this.dct == 3) { if (this.cy > 0) this.cy -= 4; }
+                //左 1
+                if (this.dct == 1) { if (this.cx > 0) this.cx -= 4; }
+                //右 2   
+                if (this.dct == 2) { if (this.cx < canvas.width - 32) this.cx += 4; }
+            }
+        }
+
+
+
+
+
+        //=================
+        //  程式一開始的設定
+        //=================
+        function init() {
+            canvas = document.getElementById("cvs");
+            context = canvas.getContext("2d");
+
+            //載入主角圖片, 完成後執行setup()方法
+            gaku.addEventListener("load", setup, false);
+            gaku.src = "cat.png";
+        }
+
+
+
+        //====================
+        //  完成載入圖片後執行
+        //====================
+        function setup() {
+            //生成主角物件內容
+            sprite = new MySprite(parseInt(Math.random() * 800), parseInt(Math.random() * 600), 0);
+
+            //****如果使用者按下鍵盤****	
+            document.onkeydown = function (e) {
+                //如果按上
+                if (e.keyCode == 38) { sprite.dct = 3; }
+
+                //如果按下
+                if (e.keyCode == 40) { sprite.dct = 0; }
+
+                //如果按左
+                if (e.keyCode == 37) { sprite.dct = 1; }
+
+                //如果按右
+                if (e.keyCode == 39) { sprite.dct = 2; }
+            }
+
+
+            //設定每隔0.15秒即執行showImg()一次
+            setInterval(showImg, 150);
+        }
+
+
+
+        //=================================
+        //  動畫的主流程, 每隔0.15秒執行一次
+        //=================================
+        function showImg() {
+            // 清除畫布
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 填背景色
+            //context.fillStyle = "#A0A0A0";
+            //context.fillRect (0, 0, canvas.width, canvas.height);
+            var img = new Image();
+            img.src = 'map.png';
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            //console.log(sprite.dct, sprite.cy);
+
+            if (sprite.cy <= 4) {
+                sprite.dct = 0;
+            }
+            if (sprite.cy >= canvas.height - 32) {
+                sprite.dct = 3;
+            }
+
+            // 繪主角       
+            sprite.draw();
+        }
+
+    </script>
+
+</head>
+
+
+<body onLoad="init()">
+    <div align="center">
+        <canvas id="cvs" width="800" height="600">
+        </canvas>
+    </div>
+</body>
+
+</html>

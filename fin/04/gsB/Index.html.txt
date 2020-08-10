@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= include('Stylesheet'); ?>
+    <script>
+      window.onload = function(){
+        getTime();
+        //google.script.run.withSuccessHandler(showData).getData();
+        console.log(<?= para ?>);
+      }
+//      function showData(data){
+//        var html = "";
+//        for (var i=0; i<data.length; i++) {
+//          html += "<br>" + data[i].join(":");
+//        }
+//        document.getElementById("data").innerHTML = html;
+//      }
+      function getTime(){
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',hour: "2-digit", minute: "2-digit"  };
+        document.getElementById("time").innerHTML = new Date().toLocaleDateString("zh-TW",options);
+      }
+      
+    </script>
+  </head>
+  <body>
+    <table id="myTable">
+      <tr>
+        <th>編號</th>
+        <th>姓名</th>
+        <th>職位</th>
+        <th>電話</th>
+      </tr>
+      <tr>
+        <td><?= para.number ?></td>
+        <td><?= para.name ?></td>
+        <td><?= para.title ?></td>
+        <td><?= para.phone ?></td>
+      </tr>
+    </table>
+    <div>[<span id="time"></span>] <?= msg ?></div>
+    <!--div id="data"></div-->
+  </body>
+</html>

@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>考題 04</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./stytle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+<body>
+    <!-- <form> -->
+    <!-- <label for="typeInput">類別:</label> -->
+    <select id="typeInput" name="type">
+        <option value="number">編號</option>
+        <option value="name">姓名</option>
+        <option value="phone">電話</option>
+    </select>
+    
+    <!-- <label for="keywordInput">關鍵字:</label>value="靜" -->
+    <input type="text" id="keywordInput" >
+    <!-- <br> -->
+    <input class="btn" type="submit" value="查詢" onclick="Search()">
+    </button>
+    <!-- </form> -->
+    <br>
+    <br>
+
+    <form name="myform" action="https://script.google.com/macros/s/AKfycbxis8omux3GTAp0ELdWUgZ0y_TlBjF6niuFAGjjIZncvZDkZSs/exec"
+        method="post" target="hidden_iframe">
+        <input type="hidden" name="method" value="write" />
+        <input type="hidden" name="sql" />
+        <input type="hidden" name="number" />
+        <input type="hidden" name="name" />
+        <input type="hidden" name="title" />
+        <input type="hidden" name="phone" />
+        <input type="hidden" name="note" />
+        <!-- <a href="javascript: submitform()">Test</a> -->
+        <!-- <input type="submit" value="提交" /> -->
+    </form>
+    <div style="overflow-x:auto;">
+        <table id="myTable">
+            <tr>
+                <th>編號</th>
+                <th>姓名</th>
+                <th>職位</th>
+                <th>電話</th>
+                <th style="text-align: right;">
+                    <button class="tableBtn" onclick="addRow()">新增</button>
+                </th>
+            </tr>
+            <!-- <tr>
+            <td contenteditable='true'></td>
+            <td contenteditable='true'></td>
+            <td contenteditable='true'></td>
+            <td contenteditable='true'></td>
+            <td contenteditable='true'></td>
+        </tr> -->
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        function Search() {
+            $.get("https://script.google.com/macros/s/AKfycbxis8omux3GTAp0ELdWUgZ0y_TlBjF6niuFAGjjIZncvZDkZSs/exec",
+                {
+                    "type": document.getElementById("typeInput").value,
+                    "keyword": document.getElementById("keywordInput").value
+                },
+                function (data) {
+                    var table = document.getElementById("myTable");
+                    for (var i = table.rows.length; i > 1; i--) {
+                        table.deleteRow(i - 1);
+                    }
+                    var d = data.split(',');  //把傳出來的字串分割成陣列
+                    var len = d.length;
+                    console.log(d);
+                    if (len == 1) {
+                        var row = table.insertRow();
+                        var cell = row.insertCell(0);
+                        cell.colSpan = 5;
+                        cell.style.textAlign = "center";
+                        cell.innerHTML = data;
+                        return;
+                    }
+                    var row_num = len / 4;
+                    for (var r = 0; r < row_num; r++) {
+                        var row = table.insertRow();
+                        for (var i = 0; i < 4; i++) {
+                            var cell = row.insertCell(i);
+                            cell.innerHTML = d[r * 4 + i];
+                        }
+                        var cell = row.insertCell();
+                        cell.width = '90px';
+                        cell.innerHTML = '<button class="tableBtn" onclick="editRow(\'replace\',' + r + ')">修改</button><button class="tableBtn red" onclick="deleteRow(' + r + ')">刪除</button>';
+                    }
+                }
+            );
+        }
+        function addRow() {
+            var table = document.getElementById("myTable");
+            for (var i = table.rows.length; i > 1; i--) {
+                table.deleteRow(i - 1);
+            }
+            var row = table.insertRow();
+            for (var i = 0; i < 4; i++) {
+                var cell = row.insertCell(i);
+                cell.setAttribute('contenteditable', 'true');
+                cell.setAttribute('class', 'edit');
+                cell.innerHTML = '';
+            }
+            var cell = row.insertCell();
+            cell.setAttribute('contenteditable', 'true');
+            cell.setAttribute('class', 'edit');
+            cell.width = '90px';
+            var r = table.rows.length - 2;
+            cell.innerHTML = '<button class="tableBtn" onclick="editRow(\'insert\',' + r + ')">新增</button><button class="tableBtn red" onclick="cancelRow(' + r + ')">取消</button>';
+        }
+        function editRow(sql, n) {
+            // console.log(n);
+            var table = document.getElementById("myTable");
+            var row = table.rows[n + 1];
+            // console.log(row);
+            var editBtn = row.cells[row.cells.length - 1].getElementsByTagName("button")[0];
+            // console.log(editBtn);
+            for (var i = row.cells.length - 1; i > 1; i--) {
+                // console.log(row.cells[i - 1]);
+                var cell = row.cells[i - 1];
+                if (cell.hasAttribute('contenteditable')) {
+                    cell.removeAttribute('contenteditable');
+                    cell.removeAttribute('class', 'edit');
+                } else {
+                    cell.setAttribute('contenteditable', 'true');
+                    cell.setAttribute('class', 'edit');
+                }
+            }
+            if (row.cells[1].hasAttribute('contenteditable')) {
+                row.cells[0].setAttribute('class', 'edit');
+                row.cells[row.cells.length - 1].setAttribute('class', 'edit');
+                editBtn.innerText = '完成';
+            } else {
+                row.cells[0].removeAttribute('class', 'edit');
+                row.cells[row.cells.length - 1].removeAttribute('class', 'edit');
+                editBtn.innerText = '修改';
+                // console.log(row);
+                var data = {};
+                var key = ['number', 'name', 'title', 'phone', 'note'];
+                var len = row.cells.length - 1;
+                data['method'] = 'write';
+                data['sql'] = sql;
+                for (var i = 0; i < len; i++) {
+                    var cellVal = row.cells[i].innerText;
+                    data[key[i]] = cellVal;
+                }
+                console.log(data);
+                submitform(data);
+                if (sql == 'insert') {
+                    table.deleteRow(n + 1);
+                }
+            }
+        }
+        function deleteRow(n) {
+            console.log(n);
+            var table = document.getElementById("myTable");
+
+            var row = table.rows[n + 1];
+            var data = {};
+            var key = ['number', 'name', 'title', 'phone', 'note'];
+            var len = row.cells.length - 1;
+            data['method'] = 'write';
+            data['sql'] = 'delete';
+            for (var i = 0; i < len; i++) {
+                var cellVal = row.cells[i].innerText;
+                data[key[i]] = cellVal;
+            }
+            console.log(data);
+            table.deleteRow(n + 1);
+            submitform(data);
+            //Search();
+        }
+        function cancelRow(n) {
+            console.log(n);
+            var table = document.getElementById("myTable");
+            table.deleteRow(n + 1);
+        }
+        function submitform(params) {
+            var myform = document.forms['myform'];
+            for (var key in params) {
+                myform[key].value = params[key];
+            }
+            myform.submit();
+        }
+        // function submitform() {
+        //     var myform = document.forms['myform'];
+        //     myform['number'].value = 11;
+        //     myform['name'].value = '王小同';
+        //     myform['title'].value = '學生';
+        //     myform['phone'].value = '0912-111-222';
+        //     myform['note'].value = '測試寫入功能';
+        //     myform.submit();
+        // }
+    </script>
+</body>
+
+</html>
