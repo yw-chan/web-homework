@@ -1,0 +1,69 @@
+function doGet(e) {
+   var url = 'https://docs.google.com/spreadsheets/d/1W5KBt7lTfDto9sgCjWOAgf17asmme0d_40DBZjdgOfQ/edit?usp=sharing';
+   var name = 'sheet1';
+   var spreadSheet = SpreadsheetApp.openByUrl(url);
+   var sheetName = spreadSheet.getSheetByName(name);
+  //getSheetValues(startRow, startColumn, numRows, numColumns)
+//  Logger.log(sheetName.getSheetValues(1,1,1,1));   // 取得 A1 數值
+//  Logger.log(sheetName.getSheetValues(4,2,1,1));   // 取得 B4 數值
+  
+  //取得有資料的最後一行的"行數"(目的要在最後一行插入新資料)
+  var lastRow = sheetName.getLastRow();
+  var data = [];
+  for (i = 0 ; i < lastRow ; i++){
+     data[i] = [];
+  }
+  //data = sheetName.getRange(2, 1, lastRow, 5).getValues();
+  data = sheetName.getRange(1, 1, lastRow, 5).getValues();
+  //Logger.log(data);
+  var params = e.parameter;
+  //Logger.log(params.type+","+params.keyword);
+  //return ContentService.createTextOutput(params.type+","+params.keyword);
+  //var param = e.parameter;
+  var type = 0,
+      keyword = params.keyword;
+  switch(params.type){
+    case "number":
+      type = 0;
+      break;
+    case "name":
+      type = 1;
+      break;
+    case "phone":
+      type = 3;
+      break;
+  }
+  //Logger.log(type+","+keyword);
+  var output = [];
+  for(i = 0; i < lastRow; i++){
+    if (Myindexof(data[i][type],keyword) > -1){
+      Logger.log("find: ["+data[i]+"]");
+      output.push(data[i]);
+      //return ContentService.createTextOutput(JSON.stringify(data[i])).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  Logger.log("output: ["+output+"]");
+  if(output.length==0){
+    Logger.log("not find");
+    return ContentService.createTextOutput("沒有找到資料");
+  }
+  return ContentService.createTextOutput(output);
+}
+
+function Myindexof(s,text)
+{
+  var lengths = s.length;
+  var lengtht = text.length;
+  //Logger.log(lengths+" : "+lengtht);
+  if(lengths == undefined || lengtht == undefined ){
+    return s==text?1:-1;
+  }
+  
+  for (var i = 0;i < lengths - lengtht + 1;i++)
+  {
+    //Logger.log(i+"-> "+s.substring(i,lengtht + i));
+    if (s.substring(i,lengtht + i) == text)
+      return i;
+  }
+  return -1;
+}

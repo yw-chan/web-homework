@@ -1,0 +1,96 @@
+* {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+
+table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+    transition: 1s;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr {
+    transition: 1s;
+}
+
+tr:hover,
+tr:focus {
+    background-color: #fffedc;
+}
+
+th {
+    text-align: left;
+    background-color: white;
+    color: black;
+}
+
+input[type=text],
+select {
+    /* width: 300px; */
+    font-size: 110%;
+    margin: 4px 0;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+tr .edit {
+    background-color: rgb(191, 255, 193);
+}
+
+.tableBtn {
+    cursor: pointer;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    transition: .5s;
+    padding: 2px 4px;
+    margin: 2px;
+}
+
+.tableBtn:hover {
+    background-color: #2f6a31;
+}
+
+.red {
+    background-color: rgb(175, 59, 59);
+}
+
+.red:hover {
+    background-color: rgb(235, 58, 58);
+}
+
+.btn {
+    cursor: pointer;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    padding: 4px 8px;
+    margin: 4px;
+    border-radius: 4px;
+    font-size: 110%;
+    transition: .5s;
+}
+
+.btn:hover {
+    background-color: #2f6a31;
+}
+
+.btn:disabled,
+.btn[disabled] {
+    cursor: auto;
+    border: none;
+    background-color: #cccccc;
+    color: #666666;
+}

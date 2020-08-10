@@ -1,0 +1,105 @@
+<!doctype html> 
+<html> 
+<head> <meta charset="utf-8">
+<title> HW004 </title> 
+
+<script> 
+	var canvas, context;
+	var cannon =new Image();
+	var bimage=new Image();
+	var ball = new Image();
+	var honeybee = new Image();
+	var dct=0, ddt = 0;  
+	var cx=100; 
+	var ballx=0, bally=-50;
+	
+	var beeWidth=35,beeHeight=35;
+	
+	var c,r;
+	var honeybeeRowCount = 4;
+	var honeybeeColumnCount = 10;
+	var honeybeeWidth = 65;
+	var honeybeeHeight = 40;
+	var honeybeePadding = 10;
+	var honeybeeOffsetTop = 30;
+	var honeybeeOffsetLeft = 30;
+	
+	var honeybees = [];
+	for(c=0; c<honeybeeColumnCount; c++) {
+		honeybees[c] = [];
+		for(r=0; r<honeybeeRowCount; r++) {
+			honeybees[c][r] = { x: 0, y: 0 };
+		}
+	}
+  
+	function init(){   
+		canvas=document.getElementById("cvs");
+		context=canvas.getContext("2d");
+		cannon.src="0214.png";
+		ball.src="ball.png";
+		honeybee.src="bee.png"
+		bimage.addEventListener("load", setup, false);
+		bimage.src="map.png";
+	}   
+    
+	function setup(){	
+		document.onkeydown=function(e){
+			if(e.keyCode==37){dct=1;} 
+			if(e.keyCode==39){dct=2;}  
+			if(e.keyCode==32 && ddt == 0){ddt=1;} 
+		} 
+		setInterval(showImg, 150);
+	}
+
+	function showImg(){
+		context.clearRect (0, 0, canvas.width, canvas.height);
+		context.fillStyle = "#A0A0A0";
+		context.fillRect (0, 0, canvas.width, canvas.height);
+		
+		drawCannonAndBall();
+		drawLittleBee();
+	}
+	
+	function drawCannonAndBall(){
+		if(dct==1 && cx >= 5 ){cx-=5;}
+		if(dct==2 && cx < 700){cx+=5;}
+		if (ddt == 1) {
+			ballx = cx + 25;  bally = 495;
+			ddt = 2;
+		}
+		if (ddt == 2) { 
+			bally -= 20;
+			if (bally <= -50) {ddt = 0;}
+		}
+		context.drawImage(bimage, 0, 0);
+		context.drawImage(cannon, cx, 500);
+		context.drawImage(ball, ballx, bally);
+	}
+  
+	function drawLittleBee() {
+		for(c=0; c<honeybeeColumnCount; c++) {
+			for(r=0; r<honeybeeRowCount; r++) {
+				//console.log(c,r);
+				var honeybeeX = (c*(honeybeeWidth+honeybeePadding))+honeybeeOffsetLeft;
+				var honeybeeY = (r*(honeybeeHeight+honeybeePadding))+honeybeeOffsetTop;
+				honeybees[c][r].x = honeybeeX;
+				honeybees[c][r].y = honeybeeY;
+				context.drawImage(honeybee, honeybeeX, honeybeeY,beeWidth,beeHeight); 
+				
+			}
+		}
+	}
+	
+</script> 
+
+</head> 
+
+
+<body onLoad="init()"> 
+    <div align="center"> 
+        <canvas id="cvs" width="800" height="600"> 
+        </canvas> 
+    </div> 
+</body>
+
+</html>

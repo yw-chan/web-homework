@@ -1,0 +1,33 @@
+﻿<html>
+<head>
+  <title>HW 2</title>
+  <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+  <script src="scale-on-mouseenter.js"></script>
+</head>
+ 
+<body>
+  <a-scene inspector="url: https://aframe.io/releases/0.3.0/aframe-inspector.min.js">
+    <a-assets>
+      <img id="skyTexture" src="https://raw.githubusercontent.com/aframevr/aframe/v0.7.0/examples/boilerplate/panorama/puydesancy.jpg">
+    </a-assets>
+    <a-sky src="#skyTexture"></a-sky>
+
+    <a-cylinder color="red" position="0 2 -5" rotation="30 100 0" scale="1 1 1" height="0.5"
+                scale-on-mouseenter="to: 2.2 2.2 2.2">
+      <a-animation attribute="rotation" to="30 90 90" direction="alternate" dur="2000"
+                   repeat="indefinite"></a-animation>
+      <a-animation attribute="position" to="0 2.2 -5" direction="alternate" dur="2000"
+                   repeat="indefinite"></a-animation>
+      <a-animation attribute="rotation" begin="click" dur="2000" to="30 40 0"></a-animation>
+    </a-cylinder>
+
+    <a-light type="ambient" color="#445000"></a-light>
+    <a-light type="point" intensity="3" position="2 9 4"></a-light>
+
+    <a-camera>
+      <a-cursor></a-cursor>
+    </a-camera>
+    
+  </a-scene>
+</body>
+</html>

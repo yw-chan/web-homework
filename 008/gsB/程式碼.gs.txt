@@ -1,0 +1,120 @@
+var ss = SpreadsheetApp.getActiveSpreadsheet(),
+    sheetName = ss.getSheetByName("sheet1"); // “sheet1” 改成你的工作表名稱
+
+function doPost(e) {
+  var para = e.parameter, // 存放 post 所有傳送的參數
+      method = para.method;
+  if (method == "write") {
+    var id = search_id(para.number);
+    Logger.log(id);
+    
+    var template = HtmlService.createTemplateFromFile('Index');
+    
+    //var sql = para.sql;
+    switch(para.sql){
+      case "insert":
+        if(id != -1){
+          Logger.log("insert find: ["+id+"]");
+          template.msg = "已有此資料";
+          break;
+        }
+        write_data(para);
+        template.msg = "新增成功";
+        Logger.log("insert not find");
+        break;
+      case "replace":
+        if(id == -1){
+          Logger.log("replace not find");
+          template.msg = "沒有找到資料";
+          break;
+        }
+        set_data(id,para);
+        template.msg = "更新成功";
+        Logger.log("replace find: ["+id+"]");
+        break;
+      case "delete":
+        if(id == -1){
+          Logger.log("delete not find");
+          template.msg = "沒有找到資料";
+          break;
+        }
+        sheetName.deleteRow(id+1);
+        template.msg = "刪除成功";
+        Logger.log("delete find: ["+id+"]");
+        break;
+      default:
+        //write_data(para);
+        template.msg = "參數錯誤";
+        break;
+    }
+    template.para = para;
+    return template.evaluate().setTitle('提交')
+           //.setHeight(550).setWidth(565)
+           .setSandboxMode(HtmlService.SandboxMode.IFRAME);
+    //return HtmlService.createHtmlOutputFromFile('Index');
+  }
+  if (method == "read") {
+    // 這裡放讀取資料的語法 下一篇說明
+  }
+}
+
+function write_data(para) {
+  var no = para.number,
+      name = para.name,
+      title = para.title,
+      phone = para.phone,
+      note = para.note;
+  sheetName.appendRow([no, name, title, phone, note]); // 插入一列新的資料
+  var lastRow = sheetName.getLastRow();
+  var lastCol = sheetName.getLastColumn();
+  sheetName.getRange(2, 1, lastRow, lastCol).sort(1);
+  return ContentService.createTextOutput("Done");
+}
+function set_data(id,para) {
+  var no = para.number,
+      name = para.name,
+      title = para.title,
+      phone = para.phone,
+      note = para.note;
+  var lastCol = sheetName.getLastColumn();
+  //sheetName.getRange(row, column, numRows, numColumns) (3,3,5,2); // 指向 C3:D8
+  var range = sheetName.getRange(id+1, 1, 1, lastCol);
+  range.setValues([[no, name, title, phone, note]]); // 插入一列新的資料
+  return ContentService.createTextOutput("Done");
+}
+function search_id(id){
+  //取得有資料的最後一行的"行數"(目的要在最後一行插入新資料)
+  var lastRow = sheetName.getLastRow();
+  var lastCol = sheetName.getLastColumn();
+  var data = [];
+  for (i = 0 ; i < lastRow ; i++){
+     data[i] = [];
+  }
+  data = sheetName.getRange(1, 1, lastRow, lastCol).getValues();
+  
+  for(i = 0; i < lastRow; i++){
+    if (data[i][0]==id){
+      return i;
+    }
+  }
+  return -1;
+}
+
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+
+function test(){
+     var e = {
+            parameter:{
+              "method":"write",
+              "number": "11",
+              "name": "王大同",
+              "title": "學生",
+              "phone": "0912-111-222",
+              "note": "測試寫入功能"
+            }
+     }
+    doPost(e);
+}
+

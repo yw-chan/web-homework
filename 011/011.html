@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>HW011</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<link href="css/style.css" rel="stylesheet">
+
+	<script type="text/javascript" src="src/jquery-2.2.3.min.js"></script>
+	<script type="text/javascript" src="src/jquery-csv.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+	<script type="text/javascript" src="js/googleMap.js"></script>
+	
+	<script src="http://maps.google.com/maps/api/js?key=AIzaSyA2m15yZp5ARl3FJ2o4Wnu1EVsbCXqab6w"></script>
+
+	<!-- bootstrap -->
+	<link href="bootstrap-3.3.7/css/bootstrap.min.css" rel="stylesheet">
+	<script type="text/javascript" src="bootstrap-3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body onLoad="initMap()">
+	<div class="container-fluid">
+
+		<div class="row-fluid">
+			<div class="span12">
+				<div class="jumbotron text-center">
+					<h1>嘉義市觀光景點及店家</h1>
+					<p class="text-danger">請使用localhost</p>
+					<small>點選表格內容可顯示資料座標在google地圖 -- 圖片已遺失故不顯示</small>
+				</div>
+				<div id="myMap" style="margin:10px;">MAP</div>
+				<div class="input-group" style="margin:10px;">
+					<span class="input-group-addon">
+						<i class="glyphicon glyphicon-search"></i>
+					</span>
+					<input type="text" id="myInput" class="form-control" onkeyup="tableFilter()" placeholder="以名稱或分類搜尋..." name="search">
+				</div>
+				<div class="table-responsive" style="height:350px; overflow:auto;">
+					<table class="table table-striped table-hover fixed_header" id="myTable"></table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

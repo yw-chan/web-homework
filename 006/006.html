@@ -1,0 +1,294 @@
+<!doctype html> 
+<html> 
+<head> <meta charset="utf-8">
+<title> HW005 </title> 
+
+<script> 
+	var canvas, context;
+	var cannon =new Image();
+	var bimage=new Image();
+	var ball = new Image();
+	var honeybee = new Image();
+	var dct=0, ddt = 0;  
+	var cx=50; 
+	var ballx=0, bally=-50;
+
+	var bullets = [], pp =[];
+	var enemyBullet = null;
+	
+	var beeWidth=35,beeHeight=35;
+	var bulletWidth = 20,bulletHeight = 20;
+	var enemyBulletWidth = 5,enemyBulletHeight = 15;
+	
+	var c,r;
+	var x,y;
+	var honeybeeRowCount = 4;
+	var honeybeeColumnCount = 10;
+	var honeybeeWidth = 65;
+	var honeybeeHeight = 40;
+	var honeybeePadding = 10;
+	var honeybeeOffsetTop = 30;
+	var honeybeeOffsetLeft = 30;
+
+	var score = 0;
+	var finish = false;
+	//document.addEventListener("keydown",keyDownHandler,false);
+	//document.addEventListener("keyup",keyUpHandler,false);
+	
+	var honeybees = [];
+	for(c=0; c<honeybeeColumnCount; c++) {
+		honeybees[c] = [];
+		for(r=0; r<honeybeeRowCount; r++) {
+			honeybees[c][r] = { img: null,x: 0, y: 0, status: 1};
+		}
+	}
+
+	function ballImg(){	
+		this.image=new Image();
+		this.image.src="ball.png";
+	}
+
+	var Bullet=function(posX, posY){
+		this.posX=posX;
+		this.posY=posY;
+		this.status=1;
+			
+		this.draw=function(){
+			context.drawImage(this.image, this.posX, this.posY,bulletWidth,bulletHeight); 
+		} 
+		
+		this.life=70;  //生命值
+		this.getLife=function(){return this.life;}
+		this.lifeDown=function(){this.life--;}
+
+		//取回子彈座標
+		this.getX=function(){return this.posX;}
+		this.getY=function(){return this.posY;}
+
+		this.move=function(){this.posY -=15;}
+
+		this.getStatus=function(){return this.status;}
+
+		this.CollisionDetection=function() {
+			x = this.posX;
+			y = this.posY;
+			console.log(x,y);
+			for(c=0; c<honeybeeColumnCount; c++) {
+				for(r=0; r<honeybeeRowCount; r++) {
+					var honeybee = honeybees[c][r];
+					if(honeybee.status == 1) {
+						//console.log(x,y);
+						if(x+bulletWidth/2 > honeybee.x && x < honeybee.x+beeWidth && y > honeybee.y && y < honeybee.y+beeHeight/2) {
+							console.log(c,r);
+							score++;
+							honeybee.status = 0;
+							this.status = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	var p=0,ebX=10,ebY=1000;
+
+	function drawEnemyBullet(){
+		enemyBullet= new EnemyBullet(ebX,ebY);
+		if(ebY>canvas.height){
+			p = Math.floor(Math.random() * 8); //returns a number between 0 and 7
+			var honeybee = honeybees[p][honeybeeRowCount-1];
+			if(honeybee.status==1){
+				ebY=honeybee.y+honeybeeHeight/2;
+				ebX=honeybee.x+honeybeeWidth/3;
+			}
+		}else{
+			ebY+=15;
+		}
+	}
+
+	function drawRect(x,y,width,height){
+		context.beginPath();
+		context.rect(x, y, width, height);
+		context.fillStyle = "#cc9900";
+		context.fill();
+		context.closePath();
+	}
+
+	var EnemyBullet=function(posX, posY){
+		this.posX=posX;
+		this.posY=posY;
+		this.status=false;
+		drawRect(posX,posY,enemyBulletWidth,enemyBulletHeight);
+			
+		this.draw=function(){
+			this.status=true;
+			drawRect(posX,posY,enemyBulletWidth,enemyBulletHeight);
+		}
+		//取回子彈座標
+		this.getX=function(){return this.posX;}
+		this.getY=function(){return this.posY;}
+		this.move=function(){this.posY +=15;}
+		this.getStatus=function(){return this.status;}
+	}
+
+	function honeybeeImg(){	
+        this.image=new Image();
+        this.image.src="bee.png";
+    }
+
+	var Honeybee = function(pX, pY){
+        this.pX=pX;
+        this.pY=pY;
+        this.draw=function(){
+			context.drawImage(this.image, this.pX, this.pY, beeWidth, beeHeight);
+        }
+    }
+  
+	function init(){   
+		canvas=document.getElementById("cvs");
+		context=canvas.getContext("2d");
+		Bullet.prototype=new ballImg();
+		Honeybee.prototype=new honeybeeImg();
+		cannon.src="0214.png";
+		bimage.addEventListener("load", setup, false);
+		bimage.src="map.png";
+	}
+    
+	function setup(){
+		document.onkeydown=function(e){
+			console.log(e.keyCode);
+			if(e.keyCode==37){dct=1;} 
+			if(e.keyCode==39){dct=2;}
+			if(e.keyCode==40){dct=0;}
+			var w = cx+cannon.width/2-bulletWidth/2+2;
+			if(e.keyCode==32){bullets.push(new Bullet(w, 495));}
+		}
+		/*document.onkeyup=function(e){
+			if(e.keyCode==37){dct=0;} 
+			if(e.keyCode==39){dct=0;}  
+		}*/
+		for(var i=0; i<40; i++){
+			pp[i] = 1;
+		}
+		setInterval(showImg, 150);
+	}
+
+	function showImg(){
+		context.clearRect (0, 0, canvas.width, canvas.height);
+		context.fillStyle = "#A0A0A0";
+		context.fillRect (0, 0, canvas.width, canvas.height);
+		//Background Image
+		context.drawImage(bimage, 0, 0);
+
+		drawHoneybees();
+		drawEnemyBullet()
+		drawBall();
+		drawCannon();
+		//drawScore();
+		collisionDetection();
+		if(checkFinish()){
+			drawWin();
+		}
+	}
+	
+	function drawCannon(){
+		if(dct==1 && cx >= 5 ){cx-=5;}
+		if(dct==2 && cx < 700){cx+=5;}
+		context.drawImage(cannon, cx, 500);
+	}
+
+	String.prototype.padLeft = function (length, character) { 
+		return new Array(length - this.length + 1).join(character || '0') + this; 
+	}
+
+	function drawWin(){
+		// Fill Text
+		context.lineWidth=1;
+		context.fillStyle="#990000";
+		context.lineStyle="#ffff00";
+		context.font="50px sans-serif";
+		var txt = "完成訓練";
+		var txtWidth = context.measureText(txt).width;
+		var w = canvas.width/2-txtWidth/2;
+		var h = canvas.height/2;
+		context.fillText(txt, w, h);
+	}
+
+	function drawScore(){
+		// Fill Text
+		context.lineWidth=1;
+		context.fillStyle="#000080";
+		context.lineStyle="#ffff00";
+		context.font="18px sans-serif";
+		context.fillText("Score", 20, 30);
+		context.font="30px sans-serif";
+		var text = score.toString().padLeft(2,'0')
+		context.fillText(text, 25, 60);
+	}
+
+	function drawBall(){
+		//移除已消失的子彈	
+        while(bullets.length>0 && bullets[0].getY()<=-20){
+            bullets=bullets.slice(1, bullets.length);
+        }
+		for(var i=0; i<bullets.length; i++){
+			if(bullets[i].getStatus()==1){
+				bullets[i].draw();
+			}
+			bullets[i].move();
+			bullets[i].lifeDown();
+        }
+	}
+  
+	function drawHoneybees() {
+		i = -1;
+		//pp[8] = 0;
+		for(c=0; c<honeybeeColumnCount; c++) {
+			for(r=0; r<honeybeeRowCount; r++) {
+				i ++;
+				if (honeybees[c][r].status == 1) {
+					//console.log(c,r);
+					var honeybeeX = (c*(honeybeeWidth+honeybeePadding))+honeybeeOffsetLeft;
+					var honeybeeY = (r*(honeybeeHeight+honeybeePadding))+honeybeeOffsetTop;
+					honeybees[c][r].x = honeybeeX;
+					honeybees[c][r].y = honeybeeY;
+					
+                    honeybees[c][r].img = new Honeybee(honeybeeX, honeybeeY);
+                    honeybees[c][r].img.draw();
+                }
+			}
+		}
+	}
+
+	
+	function collisionDetection() {
+		for(var i=0; i<bullets.length; i++){
+			if(bullets[i].getStatus()==1){
+				x = bullets[i].getX();
+				y = bullets[i].getY();
+				console.log(x,y);
+				bullets[i].CollisionDetection();
+			}
+		}
+	}
+
+	function checkFinish(){
+		var honeybeeTotal=honeybeeColumnCount*honeybeeRowCount;
+		if(score==honeybeeTotal){return true;}
+		return false;
+	}
+
+	
+</script> 
+
+</head> 
+
+
+<body onLoad="init()"> 
+    <div align="center"> 
+        <canvas id="cvs" width="800" height="600"> 
+        </canvas> 
+    </div> 
+</body>
+
+</html>
